@@ -55,6 +55,11 @@ class AppRouter {
       GoRoute(
         path: '/settings',
         builder: (BuildContext context, GoRouterState state) => SettingsPage(
+          appName: Variables().getAppName(),
+          version: Variables()
+              .getVersion(), // Accessing other variables from Variables class
+          creator: Variables()
+              .getCreator(), // Accessing other variables from Variables class
           selectedLanguage: Variables().getSelectedLanguage(),
           onLanguageChanged: (String newLanguage) {
             // Handle language change
@@ -133,7 +138,7 @@ class _ChatHomePageState extends State<ChatHomePage> {
               context.go('/settings');
             } else if (index == 3) {
               HapticFeedback.lightImpact();
-              context.go('/about');
+              context.go('/contacts');
             }
           },
           indicatorColor: Colors.deepOrangeAccent,
@@ -154,8 +159,8 @@ class _ChatHomePageState extends State<ChatHomePage> {
               label: 'Einstellungen',
             ),
             NavigationDestination(
-              icon: Icon(Icons.info),
-              label: 'Über',
+              icon: Icon(Icons.contacts),
+              label: 'Kontakte',
             ),
           ],
         ),

@@ -51,6 +51,11 @@ class AppRouter {
           onLanguageChanged: (String newLanguage) {
             // Handle language change
           },
+          appName: Variables().getAppName(),
+          version: Variables()
+              .getVersion(), // Accessing other variables from Variables class
+          creator: Variables()
+              .getCreator(), 
         ),
       ),
       GoRoute(
@@ -161,7 +166,7 @@ class _AboutPageState extends State<AboutPage> {
             context.go('/settings');
           } else if (index == 3) {
             HapticFeedback.lightImpact();
-            context.go('/about');
+            context.go('/contacts');
           }
         },
         indicatorColor: Colors.deepOrangeAccent,
@@ -182,8 +187,8 @@ class _AboutPageState extends State<AboutPage> {
             label: 'Einstellungen',
           ),
           NavigationDestination(
-            icon: Icon(Icons.info),
-            label: 'Über',
+            icon: Icon(Icons.contacts),
+            label: 'Kontakte',
           ),
         ],
       ),

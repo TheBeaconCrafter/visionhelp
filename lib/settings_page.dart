@@ -7,11 +7,14 @@ import 'package:restart_app/restart_app.dart';
 class SettingsPage extends StatefulWidget {
   final String selectedLanguage;
   final ValueChanged<String> onLanguageChanged;
+  final String appName;
+  final String version;
+  final String creator;
 
   const SettingsPage({
     super.key,
     required this.selectedLanguage,
-    required this.onLanguageChanged,
+    required this.onLanguageChanged, required this.appName, required this.version, required this.creator,
   });
 
   @override
@@ -21,6 +24,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   late String _selectedLanguage;
 
+  int _tapCount = 0;
   int currentPageIndex = 2;
   bool isListening = false; // New variable to track listening state
 
@@ -28,6 +32,24 @@ class _SettingsPageState extends State<SettingsPage> {
   void initState() {
     super.initState();
     _selectedLanguage = widget.selectedLanguage;
+  }
+
+  void _onVersionNumberTap() {
+    setState(() {
+      _tapCount++;
+
+      if (_tapCount == 10) {
+        // Show Snackbar with funny text
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Du bist aber neugierig!\n🍰🎂'),
+          ),
+        );
+
+        // Reset tap count after showing the Snackbar
+        _tapCount = 0;
+      }
+    });
   }
 
   @override
@@ -43,10 +65,27 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Einstellungen:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
+            Text(
+                'Willkommen zu ${widget.appName}!',
+                style:
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              GestureDetector(
+                onTap: _onVersionNumberTap,
+                child: Text(
+                  'Version: ${widget.version}',
+                  style: const TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Entwickelt von: ${widget.creator}',
+                style: const TextStyle(fontSize: 18),
+              ),
+              const SizedBox(height: 16),
             ListTile(
               title: const Text('Primäre Sprache zur Erkennung'),
               subtitle: DropdownButton<String>(
@@ -82,6 +121,17 @@ class _SettingsPageState extends State<SettingsPage> {
               },
               child: const Text('Go to Onboarding Page'),
             ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                // Reset shared preferences
+                SharedPreferences.getInstance().then((prefs) {
+                  prefs.clear();
+                  print("Prefs cleared");
+                });
+              },
+              child: const Text('Reset shared preferences'),
+            ),
           ],
         ),
       ),
@@ -102,7 +152,7 @@ class _SettingsPageState extends State<SettingsPage> {
             context.go('/settings');
           } else if (index == 3) {
             HapticFeedback.lightImpact();
-            context.go('/about');
+            context.go('/contacts');
           }
         },
         indicatorColor: Colors.deepOrangeAccent,
@@ -123,8 +173,8 @@ class _SettingsPageState extends State<SettingsPage> {
             label: 'Einstellungen',
           ),
           NavigationDestination(
-            icon: Icon(Icons.info),
-            label: 'Über',
+            icon: Icon(Icons.contacts),
+            label: 'Kontakte',
           ),
         ],
       ),

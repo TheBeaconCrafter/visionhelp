@@ -18,6 +18,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import 'dart:io';
+import 'package:visionhelp/contacts_page.dart';
+
 import 'secrets.dart';
 import 'settings_page.dart';
 import 'about_page.dart';
@@ -389,6 +391,11 @@ class AppRouter {
           onLanguageChanged: (String newLanguage) {
             // Handle language change
           },
+          appName: Variables().getAppName(),
+          version: Variables()
+              .getVersion(), // Accessing other variables from Variables class
+          creator: Variables()
+              .getCreator(), // Accessing other variables from Variables class
         ),
       ),
       GoRoute(
@@ -401,6 +408,11 @@ class AppRouter {
               .getCreator(), // Accessing other variables from Variables class
           selectedLanguage: Variables().getSelectedLanguage(),
           onLanguageChanged: (String newLanguage) {},
+        ),
+      ),
+      GoRoute(
+        path: '/contacts',
+        builder: (BuildContext context, GoRouterState state) => ContactsPage(
         ),
       ),
       GoRoute(
@@ -822,7 +834,7 @@ void _startProcessingAudio() async {
             context.go('/settings');
           } else if (index == 3) {
             HapticFeedback.lightImpact();
-            context.go('/about');
+            context.go('/contacts');
           }
         },
         indicatorColor: Colors.deepOrangeAccent,
@@ -843,8 +855,8 @@ void _startProcessingAudio() async {
             label: 'Einstellungen',
           ),
           NavigationDestination(
-            icon: Icon(Icons.info),
-            label: 'Über',
+            icon: Icon(Icons.contacts),
+            label: 'Kontakte',
           ),
         ],
       ),
